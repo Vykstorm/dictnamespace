@@ -4,6 +4,8 @@ A very simple python structure to read/modify dictionary entries using attribute
 
 This is a very basic example of usage:
 
+```
+
 from dictnamespace import DictNamespace
 
 
@@ -31,3 +33,4 @@ print('[{}] http://{}:{}/{}'.format(
     config.host,
     config.port,
     home.endpoint))
+```

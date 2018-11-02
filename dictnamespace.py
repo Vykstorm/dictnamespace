@@ -83,6 +83,11 @@ class DictNamespace:
         :param recursive: Indicates if entries with dictionary values should be treated also like instances of DictNamespace or
         just regular dictionaries (by default is set to True)
         '''
+        if not isinstance(data, dict):
+            raise TypeError('Expected instance of type dict at argument 1, got {}'.format(type(data).__name__))
+        if not isinstance(recursive, bool):
+            raise TypeError('Expected instance of type bool at argument 2, got {}'.format(type(recursive).__name__))
+
         object.__setattr__(self, 'data', data)
         object.__setattr__(self, 'recursive', recursive)
 

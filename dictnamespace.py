@@ -31,7 +31,7 @@ class DictNamespace:
     print(V['__len__']) -> 1
 
 
-    Finally, if the dictionary passed to DictNamespace its modified, any change is reflected in the namespace and viceversa:
+    If the dictionary passed to DictNamespace its modified, any change is reflected in the namespace and viceversa:
 
     d = { 'a' : 'Hello', 'b' : 'World!' }
     V = DictNamespace(d)
@@ -44,16 +44,58 @@ class DictNamespace:
     V.b = 'There!'
     print(d) -> { 'a' : 'Hello', 'b' : 'There!' }
 
+
+    Finally, by default if you access an entry on the dictionary via DictNamespace and its value is also a dictionary,
+    such value is treated also as a DictNamespace object:
+
+    V = DictNamespace({
+        'a' : 1,
+        'b' : 2,
+        'foo' : {
+            'c' : 3,
+            'd' : 4
+        }
+    })
+
+    print(V.foo.c, V.foo.d) -> 3, 4
+    print(isinstance(V.foo, DictNamespace)) -> True
+
+    You can change this behaviour setting the parameter recursive=False in the constructor (by default is True)
+
+    V = DictNamespace({
+        'a' : 1,
+        'b' : 2,
+        'foo' : {
+            'c' : 3,
+            'd' : 4
+        }
+    }, recursive = False)
+
+    print(V.foo.c, V.foo.d) -> 3, 4
+    print(isinstance(V.foo, DictNamespace)) -> False
+    print(isinstance(V.foo, dict)) -> True
     '''
-    def __init__(self, data):
+
+    def __init__(self, data, recursive = True):
+        '''
+        Initializes this object.
+        :param data: Is the dictionary linked to this instance.
+        :param recursive: Indicates if entries with dictionary values should be treated also like instances of DictNamespace or
+        just regular dictionaries (by default is set to True)
+        '''
         object.__setattr__(self, 'data', data)
+        object.__setattr__(self, 'recursive', recursive)
 
     def __getattribute__(self, item):
         if type(item) != str:
             raise KeyError()
         if item.startswith('__') and item.endswith('__'):
             return super().__getattribute__(item)
-        return super().__getattribute__('data').__getitem__(item)
+
+        value = super().__getattribute__('data').__getitem__(item)
+        if super().__getattribute__('recursive') and isinstance(value, dict):
+            return DictNamespace(value, recursive=True)
+        return value
 
     def __setattr__(self, item, value):
         if  type(item) != str:

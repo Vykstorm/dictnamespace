@@ -4,7 +4,7 @@ A very simple python structure to read/modify dictionary entries using attribute
 
 This is a very basic example of usage:
 
-```
+```python
 
 from dictnamespace import DictNamespace
 

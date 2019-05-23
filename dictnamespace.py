@@ -113,7 +113,7 @@ class DictNamespace:
 dictmetamethods = [
     '__repr__', '__hash__', '__lt__', '__le__', '__eq__', '__ne__', '__gt__',
     '__ge__', '__iter__', '__len__', '__getitem__', '__setitem__', '__delitem__',
-    '__contains__', '__doc__']
+    '__contains__']
 
 def proxy_method(cls, name):
     def proxy(self, *args, **kwargs):
